@@ -87,7 +87,7 @@ static inline uint16_t pg_utils_get_ether_type(struct rte_mbuf *pkt)
 	 * packets (l2_len must be correct).
 	 */
 	return *(uint16_t *)(rte_pktmbuf_mtod(pkt, uint8_t *) +
-			     pkt->l2_len - 2);
+			pkt->l2_len - 2);
 }
 
 #define pg_util_get_ether_src_addr(pkt)				\
@@ -103,7 +103,7 @@ static inline void *pg_utils_get_l3(struct rte_mbuf *pkt)
 }
 
 static inline int pg_utils_iter_l3(struct rte_mbuf *pkt, uint8_t *ip_type,
-			           uint8_t **ip_payload, uint16_t *size)
+		uint8_t **ip_payload, uint16_t *size)
 {
 	struct ipv6_hdr *h6 = (struct ipv6_hdr *) pg_utils_get_l3(pkt);
 	uint8_t next_header = h6->proto;
@@ -156,7 +156,7 @@ static inline int pg_utils_get_l3_len(struct rte_mbuf *pkt)
 }
 
 static inline int pg_utils_get_ipv6_l4(struct rte_mbuf *pkt, uint8_t *ip_type,
-				       uint8_t **ip_payload)
+		uint8_t **ip_payload)
 {
 	/* jump all ipv6 extension headers to ICMPv6 */
 	return pg_utils_iter_l3(pkt, ip_type, ip_payload, NULL);
