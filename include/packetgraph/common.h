@@ -66,4 +66,10 @@ static inline enum pg_side pg_flip_side(enum pg_side side)
  */
 int pg_init_syscall_catcher(void);
 
+/**
+ * Initialize syscall reporter
+ *
+ * @return 0 if the reporter has been correctly build, -1 on the contrary.
+ */
+int pg_init_syscall_reporter(void);
 #endif /* _PG_COMMON_H */

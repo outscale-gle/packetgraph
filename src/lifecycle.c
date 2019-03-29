@@ -38,7 +38,7 @@ int pg_start(int argc, char **argv)
 	int ret = rte_eal_init(argc, argv);
 
 	pg_alloc_mempool(flags);
-	if (pg_init_syscall_catcher() == -1)
+	if (pg_init_syscall_catcher() == -1 || pg_init_syscall_reporter() == -1)
 		ret = -1;
 	return ret;
 }

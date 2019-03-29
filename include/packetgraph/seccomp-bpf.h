@@ -9,11 +9,25 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file.
  */
-#ifndef SECCOMP_BPF_H
-#define SECCOMP_BPF_H
+#ifndef _SECCOMP_BPF_H_
+#define _SECCOMP_BPF_H_
 
+#define __USE_GNU
+#include <sys/ucontext.h>
+
+#define _GNU_SOURCE 1
 #include <stdio.h>
 #include <stddef.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <sys/prctl.h>
+#ifndef PR_SET_NO_NEW_PRIVS
+# define PR_SET_NO_NEW_PRIVS 38
+#endif
 
 #include <linux/unistd.h>
 #include <linux/audit.h>
@@ -33,11 +47,17 @@ struct seccomp_data {
 	__u64 args[6];
 };
 #endif
+#ifndef SYS_SECCOMP
+# define SYS_SECCOMP 1
+#endif
 
 #define syscall_nr (offsetof(struct seccomp_data, nr))
 #define arch_nr (offsetof(struct seccomp_data, arch))
 
-#if defined(__x86_64__)
+#if defined(__i386__)
+# define REG_SYSCALL	REG_EAX
+# define ARCH_NR	AUDIT_ARCH_I386
+#elif defined(__x86_64__)
 # define REG_SYSCALL	REG_RAX
 # define ARCH_NR	AUDIT_ARCH_X86_64
 #else
@@ -59,7 +79,7 @@ struct seccomp_data {
 	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_ALLOW)
 
 #define KILL_PROCESS \
-	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_KILL)
+	BPF_STMT(BPF_RET+BPF_K, SECCOMP_RET_TRAP)
 
-#endif /* SECCOMP_BPF_H */
+#endif /* _SECCOMP_BPF_H_ */
 
